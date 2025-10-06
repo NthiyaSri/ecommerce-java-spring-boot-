@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecommerce Store - Simple Version</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-description {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .error {
+            text-align: center;
+            padding: 3rem;
+            color: #e74c3c;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Ecommerce Store</h1>
+        <p>Your one-stop shop for amazing products</p>
+    </div>
+
+    <div class="container">
+        <div id="loading" class="loading">
+            Loading products...
+        </div>
+        
+        <div id="error" class="error" style="display: none;">
+            Failed to load products. Please make sure the backend server is running on http://localhost:8080
+        </div>
+        
+        <div id="product-grid" class="product-grid" style="display: none;">
+            <!-- Products will be loaded here -->
+        </div>
+    </div>
+
+    <script>
+        // Sample products (fallback if backend is not running)
+        const sampleProducts = [
+            {
+                id: 1,
+                name: "Smartphone",
+                description: "Latest Android smartphone with 128GB storage",
+                price: 25000,
+                imageUrl: "https://via.placeholder.com/300x300?text=Smartphone"
+            },
+            {
+                id: 2,
+                name: "Laptop",
+                description: "High-performance laptop for work and gaming",
+                price: 75000,
+                imageUrl: "https://via.placeholder.com/300x300?text=Laptop"
+            },
+            {
+                id: 3,
+                name: "Headphones",
+                description: "Wireless noise-cancelling headphones",
+                price: 8000,
+                imageUrl: "https://via.placeholder.com/300x300?text=Headphones"
+            },
+            {
+                id: 4,
+                name: "Watch",
+                description: "Smart fitness watch with heart rate monitor",
+                price: 15000,
+                imageUrl: "https://via.placeholder.com/300x300?text=Watch"
+            },
+            {
+                id: 5,
+                name: "Camera",
+                description: "Digital camera with 4K video recording",
+                price: 45000,
+                imageUrl: "https://via.placeholder.com/300x300?text=Camera"
+            }
+        ];
+
+        async function loadProducts() {
+            const loadingEl = document.getElementById('loading');
+            const errorEl = document.getElementById('error');
+            const gridEl = document.getElementById('product-grid');
+
+            try {
+                // Try to fetch from backend
+                const response = await fetch('http://localhost:8080/api/products');
+                
+                if (!response.ok) {
+                    throw new Error('Backend not available');
+                }
+                
+                const products = await response.json();
+                displayProducts(products.length > 0 ? products : sampleProducts);
+            } catch (error) {
+                console.log('Backend not available, using sample data');
+                displayProducts(sampleProducts);
+            }
+        }
+
+        function displayProducts(products) {
+            const loadingEl = document.getElementById('loading');
+            const errorEl = document.getElementById('error');
+            const gridEl = document.getElementById('product-grid');
+
+            loadingEl.style.display = 'none';
+            errorEl.style.display = 'none';
+            gridEl.style.display = 'grid';
+
+            gridEl.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <img src="${product.imageUrl}" alt="${product.name}" class="product-image">
+                    <div class="product-info">
+                        <h2 class="product-name">${product.name}</h2>
+                        <p class="product-description">${product.description}</p>
+                        <h3 class="product-price">₹ ${product.price.toLocaleString()}</h3>
+                        <button class="btn" onclick="addToCart(${product.id})">Add to Cart</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(productId) {
+            alert(`Product ${productId} added to cart! (This is a demo)`);
+        }
+
+        // Load products when page loads
+        window.addEventListener('DOMContentLoaded', loadProducts);
+    </script>
+</body>
+</html>
