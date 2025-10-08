@@ -16,4 +16,7 @@ public class Product {
     private String description;
     private Double price;
     private String imageUrl;
+    private String category;
+    private Boolean inStock = true;
+    private Integer rating = 5;
 }

@@ -1,1 +1,236 @@
-/* App component styles are in global styles.css */
+/* Amazon-style Header */
+.main-header {
+  background-color: #232f3e;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  max-width: 1500px;
+  margin: 0 auto;
+  gap: 8rem;
+}
+
+.logo-section {
+  display: flex;
+  flex-direction: column;
+  min-width: 120px;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.logo-text {
+  color: white;
+}
+
+.logo-domain {
+  color: #ff9900;
+}
+
+.delivery-info {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+  margin-top: 0.2rem;
+}
+
+.deliver-to {
+  color: #ccc;
+}
+
+.location {
+  font-weight: bold;
+}
+
+.search-section {
+  flex: 1;
+  max-width: 600px;
+}
+
+.search-bar {
+  display: flex;
+  height: 40px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.category-dropdown {
+  background: #f3f3f3;
+  border: none;
+  padding: 0 0.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  min-width: 60px;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  padding: 0 1rem;
+  font-size: 1rem;
+  outline: none;
+}
+
+.search-btn {
+  background: #ff9900;
+  border: none;
+  padding: 0 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search-btn:hover {
+  background: #e68900;
+}
+
+.search-icon {
+  font-size: 1.2rem;
+}
+
+.account-section {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.language-selector,
+.account-info,
+.orders,
+.cart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  font-size: 0.85rem;
+}
+
+.language-selector:hover,
+.account-info:hover,
+.orders:hover,
+.cart:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.flag {
+  font-size: 1rem;
+}
+
+.greeting,
+.returns {
+  font-size: 0.8rem;
+  color: #ccc;
+}
+
+.account-text,
+.orders-text {
+  font-weight: bold;
+}
+
+.cart {
+  position: relative;
+}
+
+.cart-icon {
+  font-size: 1.5rem;
+}
+
+.cart-count {
+  position: absolute;
+  top: -5px;
+  right: 5px;
+  background: #ff9900;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.cart-text {
+  font-weight: bold;
+  margin-top: 0.2rem;
+}
+
+/* Navigation Bar */
+.nav-bar {
+  background-color: #37475a;
+  padding: 0.5rem 0;
+}
+
+.nav-container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.nav-items {
+  display: flex;
+  gap: 5rem;
+  overflow-x: auto;
+}
+
+.nav-item {
+  white-space: nowrap;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+  transition: color 0.3s;
+}
+
+.nav-item:hover {
+  color: #ff9900;
+}
+
+/* Container for products */
+.container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header-container {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  .search-section {
+    order: 3;
+    width: 100%;
+    max-width: none;
+  }
+
+  .account-section {
+    order: 2;
+    justify-content: space-around;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .nav-items {
+    gap: 10rem;
+  }
+
+  .nav-item {
+    font-size: 0.8rem;
+  }
+}

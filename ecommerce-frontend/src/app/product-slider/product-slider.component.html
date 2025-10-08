@@ -1,0 +1,68 @@
+<div class="slider-container">
+  <div class="slider-header">
+    <h2>Featured Products</h2>
+    <p>Discover our best-selling items</p>
+  </div>
+
+  <div class="slider-wrapper" *ngIf="!loading">
+    <!-- Navigation Arrows -->
+    <button class="nav-btn prev-btn" (click)="prevSlide()" [disabled]="products.length <= itemsPerView">
+      <span>‹</span>
+    </button>
+    
+    <div class="slider-track">
+      <div class="slider-content" [style.transform]="'translateX(-' + (currentIndex * (100 / itemsPerView)) + '%)'">
+        <div class="slider-item" *ngFor="let product of products" [style.width.%]="100 / itemsPerView">
+          <div class="product-card-slider">
+            <div class="product-image-container">
+              <img [src]="product.imageUrl" [alt]="product.name" class="product-image">
+              <div class="product-overlay">
+                <button class="quick-view-btn">Quick View</button>
+              </div>
+            </div>
+            
+            <div class="product-info">
+              <div class="category-badge">{{ product.category }}</div>
+              <h3 class="product-name">{{ product.name }}</h3>
+              <p class="product-description">{{ product.description }}</p>
+              
+              <div class="rating">
+                <span *ngFor="let star of getStarArray(product.rating)" class="star">⭐</span>
+                <span class="rating-count">({{ product.rating }})</span>
+              </div>
+              
+              <div class="price-section">
+                <span class="current-price">₹{{ product.price | number:'1.0-0' }}</span>
+                <span class="original-price" *ngIf="product.price > 10000">₹{{ (product.price * 1.2) | number:'1.0-0' }}</span>
+              </div>
+              
+              <button class="add-to-cart-btn" [disabled]="!product.inStock">
+                {{ product.inStock ? 'Add to Cart' : 'Out of Stock' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <button class="nav-btn next-btn" (click)="nextSlide()" [disabled]="products.length <= itemsPerView">
+      <span>›</span>
+    </button>
+  </div>
+
+  <!-- Pagination Dots -->
+  <div class="pagination-dots" *ngIf="!loading && getTotalSlides() > 1">
+    <button 
+      *ngFor="let dot of [].constructor(getTotalSlides()); let i = index"
+      class="dot" 
+      [class.active]="i === currentIndex"
+      (click)="goToSlide(i)">
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div class="slider-loading" *ngIf="loading">
+    <div class="loading-spinner"></div>
+    <p>Loading featured products...</p>
+  </div>
+</div>

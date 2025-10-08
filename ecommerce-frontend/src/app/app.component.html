@@ -1,6 +1,84 @@
-<div class="header">
-  <h1>{{ title }}</h1>
-  <p>Your one-stop shop for amazing products</p>
-</div>
+<!-- Amazon-style Header -->
+<header class="main-header">
+  <div class="header-container">
+    <!-- Logo Section -->
+    <div class="logo-section">
+      <div class="logo">
+        <span class="logo-text">{{ title }}</span>
+        <span class="logo-domain">.in</span>
+      </div>
+      <div class="delivery-info">
+        <span class="deliver-to">Delivering to</span>
+        <span class="location">All over INDIA</span>
+      </div>
+    </div>
 
-<app-product-list></app-product-list>
+    <!-- Search Section -->
+    <div class="search-section">
+      <div class="search-bar">
+        <select class="category-dropdown">
+          <option>All</option>
+          <option>Electronics</option>
+          <option>Fashion</option>
+          <option>Home & Kitchen</option>
+          <option>Sports & Fitness</option>
+          <option>Books</option>
+          
+        </select>
+        <input type="text" class="search-input" placeholder="Search products...">
+        <button class="search-btn">
+          <i class="search-icon">🔍</i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Account & Cart Section -->
+    <div class="account-section">
+      <div class="language-selector">
+        <span class="flag">Language</span>
+        <span>IN</span>
+      </div>
+      
+      <div class="account-info">
+        <span class="greeting">Hello, Sign in</span>
+        <span class="account-text">Account & Login</span>
+      </div>
+      
+      <div class="orders">
+        <span class="returns">Returns</span>
+        <span class="orders-text">& Orders</span>
+      </div>
+      
+      <div class="cart">
+        <span class="cart-icon">🛒</span>
+        <span class="cart-count">0</span>
+        <span class="cart-text">Cart</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <nav class="nav-bar">
+    <div class="nav-container">
+      <div class="nav-items">
+        <span class="nav-item">📱 Electronics</span>
+        <span class="nav-item">👕 Fashion</span>
+        <span class="nav-item">🏠 Home & Kitchen</span>
+        <span class="nav-item">⚽ Sports</span>
+        <span class="nav-item">📚 Books</span>
+        <span class="nav-item">🎮 Gaming</span>
+        <span class="nav-item">💄 Beauty</span>
+        <span class="nav-item">🚗 Automotive</span>
+        <span class="nav-item">🥗 Food</span>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- Full Width Banner -->
+<app-banner-slider></app-banner-slider>
+
+<!-- Products Section -->
+<div class="container">
+  <app-product-list></app-product-list>
+</div>

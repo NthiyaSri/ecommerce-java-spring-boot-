@@ -1,21 +1,70 @@
 <div class="container">
+  <!-- Category Filter -->
+  <div class="filter-section" *ngIf="!loading && !error">
+    <h2>Shop by Category</h2>
+    <div class="category-filters">
+      <button 
+        class="category-btn" 
+        [class.active]="selectedCategory === ''"
+        (click)="onCategoryChange('')">
+        All Products
+      </button>
+      <button 
+        *ngFor="let category of categories"
+        class="category-btn" 
+        [class.active]="selectedCategory === category"
+        (click)="onCategoryChange(category)">
+        {{ category }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
   <div class="loading" *ngIf="loading">
-    Loading products...
+    <div class="spinner"></div>
+    <p>Loading products...</p>
   </div>
   
+  <!-- Error State -->
   <div class="error" *ngIf="error">
-    {{ error }}
+    <h3>⚠️ Connection Error</h3>
+    <p>{{ error }}</p>
+    <button class="retry-btn" (click)="loadProducts()">Try Again</button>
   </div>
   
+  <!-- Products Grid -->
   <div class="product-grid" *ngIf="!loading && !error">
     <div class="product-card" *ngFor="let product of products">
+      <div class="product-badge" *ngIf="!product.inStock">Out of Stock</div>
+      <div class="category-tag">{{ product.category }}</div>
+      
       <img [src]="product.imageUrl" [alt]="product.name" class="product-image">
+      
       <div class="product-info">
         <h2 class="product-name">{{ product.name }}</h2>
         <p class="product-description">{{ product.description }}</p>
+        
+        <!-- Rating Stars -->
+        <div class="rating">
+          <span *ngFor="let star of getStarArray(product.rating)" class="star">⭐</span>
+          <span class="rating-text">({{ product.rating }}/5)</span>
+        </div>
+        
         <h3 class="product-price">₹ {{ product.price | number:'1.0-0' }}</h3>
-        <button class="btn">Add to Cart</button>
+        
+        <button 
+          class="btn" 
+          [disabled]="!product.inStock"
+          [class.disabled]="!product.inStock">
+          {{ product.inStock ? 'Add to Cart' : 'Out of Stock' }}
+        </button>
       </div>
     </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!loading && !error && products.length === 0">
+    <h3>No products found</h3>
+    <p>Try selecting a different category</p>
   </div>
 </div>

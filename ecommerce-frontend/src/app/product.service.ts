@@ -8,6 +8,9 @@ export interface Product {
   description: string;
   price: number;
   imageUrl: string;
+  category: string;
+  inStock: boolean;
+  rating: number;
 }
 
 @Injectable({
@@ -18,9 +21,16 @@ export class ProductService {
 
   constructor(private http: HttpClient) { }
 
-  getProducts(): Observable<Product[]> {
+  getProducts(category?: string): Observable<Product[]> {
     console.log('Fetching products from:', this.apiUrl);
-    return this.http.get<Product[]>(this.apiUrl).pipe(
+    const url = category ? `${this.apiUrl}?category=${category}` : this.apiUrl;
+    return this.http.get<Product[]>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getCategories(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/categories`).pipe(
       catchError(this.handleError)
     );
   }

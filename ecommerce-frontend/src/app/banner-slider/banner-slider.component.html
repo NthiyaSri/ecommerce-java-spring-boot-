@@ -1,0 +1,67 @@
+<div class="banner-slider" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+  <div class="slider-container">
+    <!-- Slides -->
+    <div class="slides-wrapper">
+      <div 
+        *ngFor="let slide of slides; let i = index"
+        class="slide"
+        [class.active]="i === currentSlide"
+        [style.background]="slide.backgroundImage">
+        
+        <div class="slide-content">
+          <div class="content-wrapper">
+            <div class="text-content" [style.color]="slide.textColor">
+              <h1 class="slide-title">{{ slide.title }}</h1>
+              <h2 class="slide-subtitle">{{ slide.subtitle }}</h2>
+              <p class="slide-description">{{ slide.description }}</p>
+              <button 
+                class="cta-button" 
+                [style.background-color]="slide.buttonColor"
+                (click)="goToSlide(i)">
+                {{ slide.buttonText }}
+              </button>
+            </div>
+            
+            <div class="visual-content">
+              <div class="product-showcase">
+                <div class="floating-element element-1"></div>
+                <div class="floating-element element-2"></div>
+                <div class="floating-element element-3"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Decorative Elements -->
+        <div class="decorative-shapes">
+          <div class="shape shape-1"></div>
+          <div class="shape shape-2"></div>
+          <div class="shape shape-3"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Arrows -->
+    <button class="nav-arrow prev-arrow" (click)="prevSlide()">
+      <span>‹</span>
+    </button>
+    <button class="nav-arrow next-arrow" (click)="nextSlide()">
+      <span>›</span>
+    </button>
+
+    <!-- Pagination Dots -->
+    <div class="pagination">
+      <button 
+        *ngFor="let slide of slides; let i = index"
+        class="dot"
+        [class.active]="i === currentSlide"
+        (click)="goToSlide(i)">
+      </button>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+      <div class="progress-fill" [style.width.%]="((currentSlide + 1) / slides.length) * 100"></div>
+    </div>
+  </div>
+</div>
