@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Endpoint Tester</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success {
+            border-color: #28a745;
+            background-color: #d4edda;
+        }
+        .error {
+            border-color: #dc3545;
+            background-color: #f8d7da;
+        }
+        .status {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Ecommerce API Endpoint Tester</h1>
+    
+    <div class="container">
+        <h2>Backend Connection Test</h2>
+        <p>Test if the Spring Boot backend is running on port 8080</p>
+        <button onclick="testConnection()">Test Backend Connection</button>
+        <div id="connectionResult" class="result" style="display: none;"></div>
+    </div>
+
+    <div class="container">
+        <h2>Product API Tests</h2>
+        <button onclick="testGetAllProducts()">Get All Products</button>
+        <button onclick="testGetCategories()">Get Categories</button>
+        <button onclick="testGetProductById()">Get Product by ID (1)</button>
+        <button onclick="reloadData()">Reload Sample Data</button>
+        <div id="productResult" class="result" style="display: none;"></div>
+    </div>
+
+    <div class="container">
+        <h2>CORS Test</h2>
+        <p>Test if CORS is properly configured for frontend-backend communication</p>
+        <button onclick="testCORS()">Test CORS Configuration</button>
+        <div id="corsResult" class="result" style="display: none;"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8080/api';
+
+        function showResult(elementId, content, isSuccess = true) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.className = `result ${isSuccess ? 'success' : 'error'}`;
+            element.innerHTML = content;
+        }
+
+        async function testConnection() {
+            try {
+                showResult('connectionResult', 'Testing connection...', true);
+                const response = await fetch(`${API_BASE}/products`);
+                if (response.ok) {
+                    showResult('connectionResult', 
+                        `✅ SUCCESS: Backend is running!\n` +
+                        `Status: ${response.status} ${response.statusText}\n` +
+                        `URL: ${response.url}`, true);
+                } else {
+                    showResult('connectionResult', 
+                        `❌ ERROR: Backend responded with error\n` +
+                        `Status: ${response.status} ${response.statusText}`, false);
+                }
+            } catch (error) {
+                showResult('connectionResult', 
+                    `❌ ERROR: Cannot connect to backend\n` +
+                    `Make sure Spring Boot is running on port 8080\n` +
+                    `Error: ${error.message}`, false);
+            }
+        }
+
+        async function testGetAllProducts() {
+            try {
+                showResult('productResult', 'Fetching all products...', true);
+                const response = await fetch(`${API_BASE}/products`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('productResult', 
+                        `✅ SUCCESS: Retrieved ${data.length} products\n\n` +
+                        `Sample products:\n${JSON.stringify(data.slice(0, 2), null, 2)}`, true);
+                } else {
+                    showResult('productResult', 
+                        `❌ ERROR: ${response.status} ${response.statusText}\n` +
+                        `Response: ${JSON.stringify(data, null, 2)}`, false);
+                }
+            } catch (error) {
+                showResult('productResult', `❌ ERROR: ${error.message}`, false);
+            }
+        }
+
+        async function testGetCategories() {
+            try {
+                showResult('productResult', 'Fetching categories...', true);
+                const response = await fetch(`${API_BASE}/products/categories`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('productResult', 
+                        `✅ SUCCESS: Retrieved categories\n\n` +
+                        `Categories: ${JSON.stringify(data, null, 2)}`, true);
+                } else {
+                    showResult('productResult', 
+                        `❌ ERROR: ${response.status} ${response.statusText}\n` +
+                        `Response: ${JSON.stringify(data, null, 2)}`, false);
+                }
+            } catch (error) {
+                showResult('productResult', `❌ ERROR: ${error.message}`, false);
+            }
+        }
+
+        async function testGetProductById() {
+            try {
+                showResult('productResult', 'Fetching product by ID...', true);
+                const response = await fetch(`${API_BASE}/products/1`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('productResult', 
+                        `✅ SUCCESS: Retrieved product\n\n` +
+                        `Product: ${JSON.stringify(data, null, 2)}`, true);
+                } else {
+                    showResult('productResult', 
+                        `❌ ERROR: ${response.status} ${response.statusText}\n` +
+                        `Response: ${JSON.stringify(data, null, 2)}`, false);
+                }
+            } catch (error) {
+                showResult('productResult', `❌ ERROR: ${error.message}`, false);
+            }
+        }
+
+        async function reloadData() {
+            try {
+                showResult('productResult', 'Reloading sample data...', true);
+                const response = await fetch(`${API_BASE}/products/reload-data`, {
+                    method: 'POST'
+                });
+                const data = await response.text();
+                
+                if (response.ok) {
+                    showResult('productResult', 
+                        `✅ SUCCESS: Data reloaded\n\n` +
+                        `Response: ${data}`, true);
+                } else {
+                    showResult('productResult', 
+                        `❌ ERROR: ${response.status} ${response.statusText}\n` +
+                        `Response: ${data}`, false);
+                }
+            } catch (error) {
+                showResult('productResult', `❌ ERROR: ${error.message}`, false);
+            }
+        }
+
+        async function testCORS() {
+            try {
+                showResult('corsResult', 'Testing CORS configuration...', true);
+                
+                const response = await fetch(`${API_BASE}/products`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Origin': 'http://localhost:4203'
+                    }
+                });
+                
+                if (response.ok) {
+                    showResult('corsResult', 
+                        `✅ SUCCESS: CORS is properly configured\n` +
+                        `Status: ${response.status}\n` +
+                        `Access-Control-Allow-Origin: ${response.headers.get('Access-Control-Allow-Origin') || 'Not set'}\n` +
+                        `Frontend can communicate with backend!`, true);
+                } else {
+                    showResult('corsResult', 
+                        `⚠️ WARNING: Response received but with error status\n` +
+                        `Status: ${response.status} ${response.statusText}`, false);
+                }
+            } catch (error) {
+                if (error.message.includes('CORS')) {
+                    showResult('corsResult', 
+                        `❌ CORS ERROR: ${error.message}\n` +
+                        `This means the backend is not allowing requests from the frontend.\n` +
+                        `Check CORS configuration in Spring Boot.`, false);
+                } else {
+                    showResult('corsResult', `❌ ERROR: ${error.message}`, false);
+                }
+            }
+        }
+
+        // Auto-test connection on page load
+        window.onload = function() {
+            setTimeout(testConnection, 1000);
+        };
+    </script>
+</body>
+</html>

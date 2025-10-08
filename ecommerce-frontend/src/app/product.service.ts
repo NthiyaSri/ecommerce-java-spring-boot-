@@ -11,6 +11,18 @@ export interface Product {
   category: string;
   inStock: boolean;
   rating: number;
+  
+  // Additional product details
+  detailedDescription?: string;
+  specifications?: string;
+  features?: string;
+  brand?: string;
+  model?: string;
+  originalPrice?: number;
+  stockQuantity?: number;
+  warranty?: string;
+  deliveryInfo?: string;
+  additionalImages?: string;
 }
 
 @Injectable({

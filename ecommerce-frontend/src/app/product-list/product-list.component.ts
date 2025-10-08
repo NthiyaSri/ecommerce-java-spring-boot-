@@ -57,4 +57,13 @@ export class ProductListComponent implements OnInit {
   getStarArray(rating: number): number[] {
     return Array(rating).fill(0);
   }
+
+  goToProductDetails(productId: number): void {
+    // Emit event to parent component to navigate
+    // In a real app, you would use Angular Router
+    const event = new CustomEvent('navigate-to-product', { 
+      detail: { page: 'product-details', productId: productId }
+    });
+    window.dispatchEvent(event);
+  }
 }

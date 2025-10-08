@@ -55,8 +55,9 @@
         <button 
           class="btn" 
           [disabled]="!product.inStock"
-          [class.disabled]="!product.inStock">
-          {{ product.inStock ? 'Add to Cart' : 'Out of Stock' }}
+          [class.disabled]="!product.inStock"
+          (click)="goToProductDetails(product.id)">
+          {{ product.inStock ? 'Go To Shop' : 'Out of Stock' }}
         </button>
       </div>
     </div>

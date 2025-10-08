@@ -39,12 +39,12 @@
         <span>IN</span>
       </div>
       
-      <div class="account-info">
+      <div class="account-info" (click)="navigateTo('auth')">
         <span class="greeting">Hello, Sign in</span>
         <span class="account-text">Account & Login</span>
       </div>
       
-      <div class="orders">
+      <div class="orders" (click)="navigateTo('orders')">
         <span class="returns">Returns</span>
         <span class="orders-text">& Orders</span>
       </div>
@@ -61,7 +61,8 @@
   <nav class="nav-bar">
     <div class="nav-container">
       <div class="nav-items">
-        <span class="nav-item">📱 Electronics</span>
+        <span class="nav-item" (click)="navigateTo('home')">🏠 Home</span>
+        <span class="nav-item" (click)="navigateTo('mobile-shop')">📱 Mobile Shop</span>
         <span class="nav-item">👕 Fashion</span>
         <span class="nav-item">🏠 Home & Kitchen</span>
         <span class="nav-item">⚽ Sports</span>
@@ -69,16 +70,46 @@
         <span class="nav-item">🎮 Gaming</span>
         <span class="nav-item">💄 Beauty</span>
         <span class="nav-item">🚗 Automotive</span>
-        <span class="nav-item">🥗 Food</span>
       </div>
     </div>
   </nav>
 </header>
 
-<!-- Full Width Banner -->
-<app-banner-slider></app-banner-slider>
+<!-- Page Content Based on Navigation -->
+<div [ngSwitch]="currentPage">
+  <!-- Home Page -->
+  <div *ngSwitchCase="'home'">
+    <app-banner-slider></app-banner-slider>
+    <div class="container">
+      <app-product-list></app-product-list>
+    </div>
+  </div>
 
-<!-- Products Section -->
-<div class="container">
-  <app-product-list></app-product-list>
+  <!-- Authentication Page -->
+  <div *ngSwitchCase="'auth'">
+    <app-auth></app-auth>
+  </div>
+
+  <!-- Orders & Returns Page -->
+  <div *ngSwitchCase="'orders'">
+    <app-orders-returns></app-orders-returns>
+  </div>
+
+  <!-- Mobile Shop Page -->
+  <div *ngSwitchCase="'mobile-shop'">
+    <app-mobile-shop></app-mobile-shop>
+  </div>
+
+  <!-- Product Details Page -->
+  <div *ngSwitchCase="'product-details'">
+    <app-product-details [productId]="selectedProductId"></app-product-details>
+  </div>
+
+  <!-- Default Home Page -->
+  <div *ngSwitchDefault>
+    <app-banner-slider></app-banner-slider>
+    <div class="container">
+      <app-product-list></app-product-list>
+    </div>
+  </div>
 </div>

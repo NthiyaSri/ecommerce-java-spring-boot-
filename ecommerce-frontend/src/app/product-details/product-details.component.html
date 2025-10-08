@@ -1,0 +1,320 @@
+<div class="product-details-container">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <p>Loading product details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-state">
+    <div class="error-icon">⚠️</div>
+    <h3>Failed to load product</h3>
+    <p>{{ error }}</p>
+    <button class="retry-btn" (click)="loadProduct()">Try Again</button>
+  </div>
+
+  <!-- Product Details -->
+  <div *ngIf="!loading && !error && product" class="product-details">
+    <!-- Breadcrumb Navigation -->
+    <nav class="breadcrumb">
+      <span (click)="goBack()" class="breadcrumb-link">Home</span>
+      <span class="breadcrumb-separator">›</span>
+      <span (click)="goBack()" class="breadcrumb-link">Mobiles & Accessories</span>
+      <span class="breadcrumb-separator">›</span>
+      <span (click)="goBack()" class="breadcrumb-link">{{ product.category }}</span>
+      <span class="breadcrumb-separator">›</span>
+      <span class="breadcrumb-current">{{ product.brand }} {{ product.model }}</span>
+      <button class="compare-btn">Compare</button>
+    </nav>
+
+    <!-- Product Main Section -->
+    <div class="product-main">
+      <!-- Product Images -->
+      <div class="product-images">
+        <div class="wishlist-btn" (click)="toggleWishlist()">
+          <span [class.active]="isInWishlist">{{ isInWishlist ? '❤️' : '🤍' }}</span>
+        </div>
+        
+        <div class="main-image">
+          <img [src]="productImages[selectedImageIndex]" [alt]="product.name" class="main-product-image">
+          <div class="image-badges">
+            <span class="badge discount-badge" *ngIf="getDiscountPercentage() > 0">{{ getDiscountPercentage() }}% off</span>
+          </div>
+        </div>
+        
+        <div class="image-thumbnails" *ngIf="productImages.length > 1">
+          <img 
+            *ngFor="let image of productImages; let i = index"
+            [src]="image" 
+            [alt]="product.name"
+            class="thumbnail"
+            [class.active]="i === selectedImageIndex"
+            (click)="selectImage(i)">
+        </div>
+
+        <!-- Google Gemini AI Integration -->
+        <div class="ai-integration">
+          <div class="gemini-logo">
+            <span class="diamond">♦</span>
+            <span class="text">with Google Gemini</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Info -->
+      <div class="product-info">
+        <div class="product-header">
+          <h1 class="product-title">{{ product.name }}</h1>
+          <div class="product-subtitle">
+            {{ product.brand }} {{ product.model }} ({{ selectedColor }}, {{ selectedRAM }} GB RAM)
+          </div>
+          
+          <!-- Rating and Reviews -->
+          <div class="rating-section">
+            <div class="rating-badge">
+              <span class="rating-score">{{ product.rating }}</span>
+              <span class="star">⭐</span>
+            </div>
+            <span class="rating-text">{{ formatNumber(47734) }} Ratings & {{ formatNumber(4400) }} Reviews</span>
+            <span class="assured-badge">🛡️ Assured</span>
+          </div>
+
+          <!-- Special Offers -->
+          <div class="offers-section">
+            <div class="offer-tag">Extra ₹{{ formatNumber(4000) }} off</div>
+          </div>
+        </div>
+
+        <!-- Price Section -->
+        <div class="price-section">
+          <div class="current-price">₹{{ formatNumber(product.price) }}</div>
+          <div class="price-details" *ngIf="product.originalPrice && product.originalPrice > product.price">
+            <span class="original-price">₹{{ formatNumber(product.originalPrice) }}</span>
+            <span class="discount">{{ getDiscountPercentage() }}% off</span>
+            <span class="info-icon" title="Price details">ℹ️</span>
+          </div>
+          <div class="emi-info">
+            + ₹79 Protect Promise Fee <span class="learn-more">Learn more</span>
+          </div>
+          <div class="delivery-info-header">
+            Secure delivery by 11 Oct, Saturday
+          </div>
+        </div>
+
+        <!-- Color Selection -->
+        <div class="selection-section">
+          <div class="color-selection">
+            <label class="selection-label">Color</label>
+            <div class="color-options">
+              <div 
+                *ngFor="let color of availableColors"
+                class="color-option"
+                [class.selected]="selectedColor === color.name"
+                (click)="selectColor(color.name)">
+                <img [src]="color.image" [alt]="color.name" class="color-preview">
+              </div>
+            </div>
+          </div>
+
+          <!-- RAM Selection -->
+          <div class="ram-selection">
+            <label class="selection-label">RAM</label>
+            <div class="ram-options">
+              <button 
+                *ngFor="let ram of availableRAM"
+                class="ram-option"
+                [class.selected]="selectedRAM === ram"
+                (click)="selectRAM(ram)">
+                {{ ram }} GB
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Delivery Section -->
+        <div class="delivery-section">
+          <div class="delivery-header">
+            <label class="selection-label">Delivery</label>
+            <div class="pincode-input">
+              <input type="text" placeholder="Enter Delivery Pincode" [(ngModel)]="deliveryPincode">
+              <button class="check-btn" (click)="checkDelivery()">Check</button>
+            </div>
+          </div>
+          
+          <div class="delivery-details" *ngIf="deliveryChecked">
+            <div class="delivery-option">
+              <strong>Delivery by 11 Oct, Saturday</strong>
+              <div class="delivery-condition">if ordered before 4:39 PM</div>
+              <button class="view-details-btn" (click)="viewDeliveryDetails()">View Details</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Highlights Section -->
+        <div class="highlights-section">
+          <h3 class="section-title">Highlights</h3>
+          <ul class="highlights-list">
+            <li>{{ selectedRAM }} GB RAM | 128 GB ROM | Expandable Upto 2 TB</li>
+            <li>16.94 cm (6.67 inch) HD+ Display</li>
+            <li>50MP + 2MP | 8MP Front Camera</li>
+            <li>6000 mAh Battery</li>
+            <li>Dimensity 6300 Processor</li>
+          </ul>
+        </div>
+
+        <!-- Easy Payment Options -->
+        <div class="payment-section">
+          <h3 class="section-title">Easy Payment Options</h3>
+          <div class="payment-options">
+            <div class="payment-option">
+              <span class="payment-icon">💳</span>
+              <div class="payment-details">
+                <div class="payment-title">No cost EMI starting from ₹{{ formatNumber(4333) }}/month</div>
+                <div class="payment-subtitle">Cash on Delivery</div>
+              </div>
+            </div>
+            <div class="payment-option">
+              <span class="payment-icon">🏦</span>
+              <div class="payment-details">
+                <div class="payment-title">Net banking & Credit/ Debit/ ATM card</div>
+                <button class="view-details-btn">View Details</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Seller Information -->
+        <div class="seller-section">
+          <div class="seller-info">
+            <span class="seller-label">Seller</span>
+            <span class="seller-name">XONIGHT E-Commerce</span>
+            <span class="seller-rating">4.3⭐</span>
+          </div>
+          <div class="seller-support">
+            <span class="support-icon">📞</span>
+            <span class="support-text">7 Days Brand Support</span>
+            <span class="info-icon">ℹ️</span>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button 
+            class="btn btn-cart"
+            [disabled]="!product.inStock"
+            (click)="addToCart()">
+            🛒 ADD TO CART
+          </button>
+          <button 
+            class="btn btn-buy"
+            [disabled]="!product.inStock"
+            (click)="buyNow()">
+            ⚡ BUY NOW
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Details Tabs -->
+    <div class="product-tabs">
+      <div class="tab-headers">
+        <button 
+          *ngFor="let tab of tabs" 
+          class="tab-header"
+          [class.active]="activeTab === tab.id"
+          (click)="setActiveTab(tab.id)">
+          {{ tab.label }}
+        </button>
+      </div>
+
+      <div class="tab-content">
+        <!-- Description Tab -->
+        <div *ngIf="activeTab === 'description'" class="tab-panel">
+          <h3>Product Description</h3>
+          <div class="description-content">
+            <p>{{ product.detailedDescription || product.description }}</p>
+            <div class="key-features" *ngIf="product.features">
+              <h4>Key Features:</h4>
+              <ul>
+                <li *ngFor="let feature of getFeatureArray()">{{ feature }}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Specifications Tab -->
+        <div *ngIf="activeTab === 'specifications'" class="tab-panel">
+          <h3>Technical Specifications</h3>
+          <div class="specifications-table" *ngIf="product.specifications">
+            <div class="spec-category">
+              <h4>General</h4>
+              <div class="spec-grid">
+                <div *ngFor="let spec of getSpecificationArray()" class="spec-row">
+                  <span class="spec-label">{{ spec.split(':')[0] }}</span>
+                  <span class="spec-value">{{ spec.split(':')[1] }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p *ngIf="!product.specifications">No specifications available.</p>
+        </div>
+
+        <!-- Features Tab -->
+        <div *ngIf="activeTab === 'features'" class="tab-panel">
+          <h3>Key Features</h3>
+          <div class="features-grid" *ngIf="product.features">
+            <div *ngFor="let feature of getFeatureArray()" class="feature-card">
+              <div class="feature-icon">✨</div>
+              <div class="feature-text">{{ feature }}</div>
+            </div>
+          </div>
+          <p *ngIf="!product.features">No features listed.</p>
+        </div>
+
+        <!-- Reviews Tab -->
+        <div *ngIf="activeTab === 'reviews'" class="tab-panel">
+          <h3>Customer Reviews & Ratings</h3>
+          <div class="reviews-summary">
+            <div class="rating-overview">
+              <div class="overall-rating">
+                <span class="rating-number">{{ product.rating }}</span>
+                <span class="star">⭐</span>
+              </div>
+              <div class="rating-breakdown">
+                <div class="rating-text">{{ formatNumber(47734) }} Ratings & {{ formatNumber(4400) }} Reviews</div>
+                <div class="rating-bars">
+                  <div *ngFor="let rating of ratingBreakdown" class="rating-bar">
+                    <span class="rating-label">{{ rating.stars }}⭐</span>
+                    <div class="bar-container">
+                      <div class="bar-fill" [style.width.%]="rating.percentage"></div>
+                    </div>
+                    <span class="rating-count">{{ rating.count }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="sample-reviews">
+            <div class="review-item" *ngFor="let review of reviews">
+              <div class="review-header">
+                <div class="reviewer-info">
+                  <span class="reviewer-name">{{ review.userName }}</span>
+                  <div class="review-rating">
+                    <span class="rating-badge">{{ review.rating }}⭐</span>
+                  </div>
+                </div>
+                <span class="review-date">{{ review.date | date:'mediumDate' }}</span>
+              </div>
+              <p class="review-text">{{ review.comment }}</p>
+              <div class="review-actions">
+                <button class="review-action">👍 Helpful ({{ review.helpful || 12 }})</button>
+                <button class="review-action">👎</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

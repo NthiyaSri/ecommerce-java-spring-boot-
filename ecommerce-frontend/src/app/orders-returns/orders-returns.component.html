@@ -1,0 +1,135 @@
+<div class="orders-container">
+  <!-- Header -->
+  <div class="orders-header">
+    <h1>Orders & Returns</h1>
+    <p>Track your orders and manage returns in one place</p>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="filter-tabs">
+    <button 
+      class="filter-tab"
+      [class.active]="selectedFilter === 'all'"
+      (click)="filterOrders('all')">
+      All Orders ({{ orders.length }})
+    </button>
+    <button 
+      class="filter-tab"
+      [class.active]="selectedFilter === 'delivered'"
+      (click)="filterOrders('delivered')">
+      Delivered
+    </button>
+    <button 
+      class="filter-tab"
+      [class.active]="selectedFilter === 'shipped'"
+      (click)="filterOrders('shipped')">
+      Shipped
+    </button>
+    <button 
+      class="filter-tab"
+      [class.active]="selectedFilter === 'processing'"
+      (click)="filterOrders('processing')">
+      Processing
+    </button>
+    <button 
+      class="filter-tab"
+      [class.active]="selectedFilter === 'returns'"
+      (click)="filterOrders('returns')">
+      Returns
+    </button>
+  </div>
+
+  <!-- Orders List -->
+  <div class="orders-list">
+    <div *ngFor="let order of filteredOrders" class="order-card">
+      <!-- Order Header -->
+      <div class="order-header">
+        <div class="order-info">
+          <h3>Order {{ order.id }}</h3>
+          <p class="order-date">Placed on {{ order.date | date:'mediumDate' }}</p>
+        </div>
+        <div class="order-status">
+          <span 
+            class="status-badge" 
+            [style.background-color]="getStatusColor(order.status)">
+            {{ order.status | titlecase }}
+          </span>
+          <span *ngIf="order.returnStatus && order.returnStatus !== 'none'" 
+            class="return-badge"
+            [style.background-color]="getReturnStatusColor(order.returnStatus)">
+            Return {{ order.returnStatus | titlecase }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Order Items -->
+      <div class="order-items">
+        <div *ngFor="let item of order.items" class="order-item">
+          <img [src]="item.image" [alt]="item.name" class="item-image">
+          <div class="item-details">
+            <h4>{{ item.name }}</h4>
+            <p>Quantity: {{ item.quantity }}</p>
+            <p class="item-price">₹{{ item.price | number:'1.0-0' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="order-summary">
+        <div class="summary-info">
+          <p><strong>Total: ₹{{ order.total | number:'1.0-0' }}</strong></p>
+          <p *ngIf="order.trackingNumber" class="tracking-info">
+            Tracking: {{ order.trackingNumber }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="order-actions">
+        <button 
+          class="action-btn primary"
+          (click)="trackOrder(order)"
+          [disabled]="!order.trackingNumber">
+          <span class="btn-icon">📦</span>
+          Track/View Details
+        </button>
+        
+        <button 
+          class="action-btn secondary"
+          (click)="startReturn(order)"
+          [disabled]="order.status !== 'delivered'"
+          [class.return-requested]="order.returnStatus && order.returnStatus !== 'none'">
+          <span class="btn-icon">↩️</span>
+          {{ !order.returnStatus || order.returnStatus === 'none' ? 'Start a Return' : 'Return Status' }}
+        </button>
+      </div>
+
+      <!-- Return Status Details -->
+      <div *ngIf="order.returnStatus && order.returnStatus !== 'none'" class="return-details">
+        <div class="return-info">
+          <h4>Return Information</h4>
+          <p>Status: <strong>{{ order.returnStatus | titlecase }}</strong></p>
+          <p *ngIf="order.returnStatus === 'requested'">
+            Your return request is being processed. You'll receive an email with return instructions.
+          </p>
+          <p *ngIf="order.returnStatus === 'approved'">
+            Return approved! Please package the item and use the provided return label.
+          </p>
+          <p *ngIf="order.returnStatus === 'completed'">
+            Return completed. Refund has been processed to your original payment method.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="filteredOrders.length === 0" class="empty-state">
+      <div class="empty-icon">📦</div>
+      <h3>No orders found</h3>
+      <p>{{ selectedFilter === 'all' ? 'You haven\'t placed any orders yet.' : 'No orders match the selected filter.' }}</p>
+      <button class="shop-now-btn" onclick="window.location.href='/'">
+        Start Shopping
+      </button>
+    </div>
+  </div>
+</div>

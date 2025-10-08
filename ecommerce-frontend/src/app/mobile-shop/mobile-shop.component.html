@@ -1,0 +1,165 @@
+<!-- Mobile-First Shopping Interface -->
+<div class="mobile-shop">
+  <!-- Sticky Header -->
+  <div class="mobile-header">
+    <div class="header-content">
+      <h1>Shop</h1>
+      <div class="header-actions">
+        <button class="filter-toggle" (click)="toggleFilters()">
+          <span class="filter-icon">⚙️</span>
+          Filters
+        </button>
+        <div class="results-count">
+          {{ filteredProducts.length }} items
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter Overlay -->
+  <div class="filter-overlay" [class.show]="showFilters" (click)="closeFilters()">
+    <div class="filter-drawer" (click)="$event.stopPropagation()">
+      <div class="filter-header">
+        <h3>Filters & Sort</h3>
+        <button class="close-btn" (click)="closeFilters()">✕</button>
+      </div>
+
+      <div class="filter-content">
+        <!-- Sort Options -->
+        <div class="filter-section">
+          <h4>Sort By</h4>
+          <div class="sort-options">
+            <label class="radio-option">
+              <input type="radio" name="sort" value="featured" 
+                     [(ngModel)]="selectedSort" (change)="onSortChange('featured')">
+              <span>Featured</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="sort" value="price-low" 
+                     [(ngModel)]="selectedSort" (change)="onSortChange('price-low')">
+              <span>Price: Low to High</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="sort" value="price-high" 
+                     [(ngModel)]="selectedSort" (change)="onSortChange('price-high')">
+              <span>Price: High to Low</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="sort" value="rating" 
+                     [(ngModel)]="selectedSort" (change)="onSortChange('rating')">
+              <span>Customer Rating</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="filter-section">
+          <h4>Category</h4>
+          <div class="category-options">
+            <button 
+              class="category-btn"
+              [class.active]="selectedCategory === ''"
+              (click)="onCategoryChange('')">
+              All Categories
+            </button>
+            <button 
+              *ngFor="let category of categories"
+              class="category-btn"
+              [class.active]="selectedCategory === category"
+              (click)="onCategoryChange(category)">
+              {{ category }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Price Range -->
+        <div class="filter-section">
+          <h4>Price Range</h4>
+          <div class="price-range">
+            <div class="price-inputs">
+              <input 
+                type="number" 
+                placeholder="Min" 
+                [value]="priceRange.min"
+                (input)="onPriceRangeChange($any($event.target).value, priceRange.max)">
+              <span>to</span>
+              <input 
+                type="number" 
+                placeholder="Max" 
+                [value]="priceRange.max"
+                (input)="onPriceRangeChange(priceRange.min, $any($event.target).value)">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-actions">
+        <button class="clear-btn" (click)="clearFilters()">Clear All</button>
+        <button class="apply-btn" (click)="closeFilters()">Apply Filters</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <p>Loading products...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-state">
+    <div class="error-icon">⚠️</div>
+    <h3>Oops! Something went wrong</h3>
+    <p>{{ error }}</p>
+    <button class="retry-btn" (click)="loadProducts()">Try Again</button>
+  </div>
+
+  <!-- Products Grid -->
+  <div *ngIf="!loading && !error" class="products-grid">
+    <div *ngFor="let product of filteredProducts; trackBy: trackByProductId" 
+         class="product-card"
+         (click)="goToShop(product)">
+      
+      <!-- Product Image -->
+      <div class="product-image-container">
+        <img [src]="product.imageUrl" [alt]="product.name" class="product-image">
+        <div class="product-badge" *ngIf="!product.inStock">Out of Stock</div>
+        <div class="rating-overlay">
+          <span *ngFor="let star of getStarArray(product.rating)" class="star">⭐</span>
+        </div>
+      </div>
+
+      <!-- Product Info -->
+      <div class="product-info">
+        <div class="category-tag">{{ product.category }}</div>
+        <h3 class="product-name">{{ product.name }}</h3>
+        <p class="product-description">{{ product.description }}</p>
+        
+        <div class="price-section">
+          <span class="current-price">{{ formatPrice(product.price) }}</span>
+          <span *ngIf="product.price > 10000" class="original-price">
+            {{ formatPrice(product.price * 1.2) }}
+          </span>
+        </div>
+
+        <!-- Go to Shop Button -->
+        <button 
+          class="shop-btn"
+          [disabled]="!product.inStock"
+          (click)="goToShop(product); $event.stopPropagation()">
+          <span class="btn-icon">👁️</span>
+          Go to Shop
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="filteredProducts.length === 0" class="empty-state">
+      <div class="empty-icon">🔍</div>
+      <h3>No products found</h3>
+      <p>Try adjusting your filters or search terms</p>
+      <button class="clear-filters-btn" (click)="clearFilters()">Clear Filters</button>
+    </div>
+  </div>
+</div>
+

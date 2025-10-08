@@ -47,29 +47,37 @@ A full-stack ecommerce application built with **Spring Boot** (backend) and **An
 
 ## ⚡ Quick Start
 
-### 1. 🗄️ Database Setup
+### Option 1: 🚀 Use Batch Files (Windows)
+1. **Start Backend**: Double-click `start-backend.bat`
+2. **Start Frontend**: Double-click `start-frontend.bat`
+3. **Test APIs**: Open `test-api-endpoints.html` in your browser
+
+### Option 2: 📋 Manual Setup
+
+#### 1. 🗄️ Database Setup
 ```sql
 CREATE DATABASE ecommerce;
 ```
+Update credentials in `ecommerce.model/src/main/resources/application.properties`
 
-### 2. 🍃 Backend Setup (Spring Boot)
+#### 2. 🍃 Backend Setup (Spring Boot)
 ```bash
 cd ecommerce.model
-mvn clean install
+mvn clean compile
 mvn spring-boot:run
 ```
 🌐 Backend runs on: **http://localhost:8080**
 
-### 3. 🅰️ Frontend Setup (Angular)
+#### 3. 🅰️ Frontend Setup (Angular)
 ```bash
 cd ecommerce-frontend
 npm install
-ng serve
+ng serve --port 4203
 ```
-🌐 Frontend runs on: **http://localhost:4200**
+🌐 Frontend runs on: **http://localhost:4203**
 
-### 4. 📄 Simple HTML Version
-Open `ecommerce-simple.html` in your browser for a version that works without setup.
+#### 4. 🧪 Test Everything
+Open `test-api-endpoints.html` to verify all connections work properly.
 
 ## 🔗 API Endpoints
 
