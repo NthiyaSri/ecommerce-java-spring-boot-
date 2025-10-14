@@ -7,7 +7,7 @@ A full-stack ecommerce application built with **Spring Boot** (backend) and **An
 ![Angular](https://img.shields.io/badge/Angular-18-red)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-blue)
 
-## 🚀 Features
+##  Features
 
 - ✅ **Product Catalog** - Browse products with images and details
 - ✅ **Responsive Design** - Works on desktop and mobile
@@ -19,7 +19,7 @@ A full-stack ecommerce application built with **Spring Boot** (backend) and **An
 ## 📁 Project Structure
 
 ```
-├── ecommerce.model/          # 🍃 Spring Boot Backend
+├── ecommerce.model/        
 │   ├── src/main/java/com/example/ecommerce/
 │   │   ├── EcommerceApplication.java
 │   │   ├── model/Product.java
@@ -27,32 +27,28 @@ A full-stack ecommerce application built with **Spring Boot** (backend) and **An
 │   │   ├── controller/ProductController.java
 │   │   └── config/DataLoader.java
 │   └── src/main/resources/application.properties
-├── ecommerce-frontend/       # 🅰️ Angular Frontend
+├── ecommerce-frontend/     
 │   ├── src/app/
 │   │   ├── product-list/
 │   │   ├── product.service.ts
 │   │   └── app.component.*
 │   └── package.json
-├── ecommerce-simple.html     # 📄 Simple HTML version
+├── ecommerce-simple.html     
 └── README.md
-```
 
-## 🛠️ Prerequisites
+##  Prerequisites
 
-- ☕ **Java 17+**
-- 🟢 **Node.js 18+**
-- 🐬 **MySQL 8.0+**
-- 📦 **Maven 3.6+**
-- 🅰️ **Angular CLI**
+-  **Java 17+**
+-  **Node.js 18+**
+- **MySQL 8.0+**
+-  **Maven 3.6+**
+-  **Angular CLI**
 
 ## ⚡ Quick Start
 
-### Option 1: 🚀 Use Batch Files (Windows)
-1. **Start Backend**: Double-click `start-backend.bat`
-2. **Start Frontend**: Double-click `start-frontend.bat`
-3. **Test APIs**: Open `test-api-endpoints.html` in your browser
 
-### Option 2: 📋 Manual Setup
+
+
 
 #### 1. 🗄️ Database Setup
 ```sql
@@ -66,9 +62,9 @@ cd ecommerce.model
 mvn clean compile
 mvn spring-boot:run
 ```
-🌐 Backend runs on: **http://localhost:8080**
+ Backend runs on: **http://localhost:8080**
 
-#### 3. 🅰️ Frontend Setup (Angular)
+3.  Frontend Setup (Angular)
 ```bash
 cd ecommerce-frontend
 npm install
@@ -88,13 +84,6 @@ Open `test-api-endpoints.html` to verify all connections work properly.
 | `POST` | `/api/products` | Create new product |
 | `POST` | `/api/products/update-images` | Update product images |
 
-## 🛍️ Sample Products
-
-- 📱 **Smartphone** - ₹25,000
-- 💻 **Laptop** - ₹75,000
-- 🎧 **Headphones** - ₹8,000
-- ⌚ **Smart Watch** - ₹15,000
-- 📷 **Camera** - ₹45,000
 
 ## 🔧 Technologies Used
 
@@ -106,10 +95,10 @@ Open `test-api-endpoints.html` to verify all connections work properly.
 - ☕ **Java 17**
 
 ### Frontend
-- 🅰️ **Angular 18**
-- 📘 **TypeScript**
-- 🔄 **RxJS**
-- 🎨 **CSS3**
+-  **Angular 18**
+-  **TypeScript**
+-  **RxJS**
+-  **CSS3**
 
 ## 📸 Screenshots
 
@@ -119,19 +108,8 @@ The application features a modern, responsive design with:
 - Professional styling
 - Mobile-friendly interface
 
-## 🤝 Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## 👨‍💻 Author
+##  Author
 
 **NthiyaSri**
 - GitHub: [@NthiyaSri](https://github.com/NthiyaSri)
